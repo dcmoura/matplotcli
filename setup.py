@@ -27,6 +27,7 @@ setup(
         "Topic :: Utilities",
     ],
     description="MatplotCLI: create matplotlib visualizations from the command-line",
+    py_modules=['matplotcli'],
     entry_points={
         "console_scripts": [
             "plt=matplotcli:main",
@@ -42,5 +43,5 @@ setup(
     project_urls={
         "Source": "https://github.com/dcmoura/matplotcli",
     },
-    version="0.1.0-3",
+    version="0.2.0-1",
 )

@@ -36,8 +36,24 @@ def make_str_valid_varname(s):
 
 
 def read_data(vars):
-    """reads json lines from stdin"""
-    lines = [json.loads(line) for line in sys.stdin]
+    """reads json lines or an array of jsons from stdin"""
+    input_str = sys.stdin.read().lstrip()  # assuming we won't be loading GB files...
+    lines = []
+    if input_str:
+        first_char = input_str[0]
+        if first_char == "{":
+            sys.stderr.write("plt input is JSON lines\n")
+            lines = [json.loads(line) for line in input_str.splitlines()]
+        elif first_char == "[":
+            sys.stderr.write("plt input is a JSON array\n")
+            lines = json.loads(input_str)
+        else:
+            raise Exception(
+                "plt unable to determine input format, unexpected char '{}'.\n".format(
+                    first_char
+                )
+            )
+
     col_names = {key for line in lines for key in line.keys()}
     data = {
         make_str_valid_varname(col): [line.get(col) for line in lines]

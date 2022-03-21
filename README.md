@@ -16,8 +16,8 @@ plt "hist(x,30)" < sample.json
 
 ![](https://github.com/dcmoura/matplotcli/raw/main/img/hist_sample.png)
 
-
-The format of the input data format is [JSON lines](https://jsonlines.org), where each line is a valid JSON object. Look at the recipes section to learn how to handle other formats like CSV.
+MatplotCLI accepts both [JSON lines](https://jsonlines.org) and arrays of JSON objects as input.
+Look at the recipes section to learn how to handle other formats like CSV.
 
 MatplotCLI executes python code (passed as argument) where some handy imports are already done (e.g. `from matplotlib.pyplot import *`) and where the input JSON data is already parsed and available in variables, making plotting easy. Please refer to `matplotlib.pyplot`'s [reference](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.html#module-matplotlib.pyplot) and [tutorial](https://matplotlib.org/stable/tutorials/introductory/pyplot.html) for comprehensive documentation about the plotting commands.
 
@@ -75,17 +75,26 @@ pip install matplotcli
 
 ## Recipes and Examples
 
-### Plotting from a json array
+### Plotting JSON data
 
-[jq](https://stedolan.github.io/jq/) is a very handy utility whenever we need to handle different JSON flavors. The `-c` option guarantees one JSON object per line in the output. 
+MatplotCLI natively supports JSON lines:
+
+```sh
+echo '
+    {"a":0, "b":1}
+    {"a":1, "b":0}
+    {"a":3, "b":3}' |
+plt "plot(a,b)"
+```
+
+and arrays of JSON objects:
+
 
 ```sh
 echo '[
     {"a":0, "b":1},
     {"a":1, "b":0},
-    {"a":3, "b":3}
-    ]' | 
-jq -c .[] | 
+    {"a":3, "b":3}]' |
 plt "plot(a,b)"
 ```
 
@@ -115,7 +124,7 @@ cat file.toml | tomlq -c | plt "plot(x,y)"
 
 ### Plotting from a parquet file
 
- `parquet-tools` allows dumping a parquet file to JSON format.  `jq -c` makes sure that the output has 1 JSON object per line before handing over to MatplotCLI.
+ `parquet-tools` allows dumping a parquet file to JSON format.  [`jq -c`](https://stedolan.github.io/jq/) makes sure that the output has 1 JSON object per line before handing over to MatplotCLI.
 
 ```sh
 parquet-tools cat --json my.parquet | jq -c | plt "plot(x,y)"
