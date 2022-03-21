@@ -42,5 +42,5 @@ setup(
     project_urls={
         "Source": "https://github.com/dcmoura/matplotcli",
     },
-    version="0.1.0-3",
+    version="0.2.0",
 )
