@@ -2,6 +2,10 @@ import sys
 import json
 import re
 import argparse
+import importlib.metadata
+
+
+__version__ = importlib.metadata.version("matplotcli")
 
 
 def make_imports(vars):
@@ -66,15 +70,16 @@ def read_data(vars):
 def parse_args():
     """defines and parses command-line arguments"""
     parser = argparse.ArgumentParser(
-        description="""plt reads JSON lines from the stdin and 
-        executes python code with calls to matplotlib.pyplot functions to 
+        prog="matplotcli",
+        description="""plt reads JSON lines from the stdin and
+        executes python code with calls to matplotlib.pyplot functions to
         generate plots. For more information and examples visit:
         https://github.com/dcmoura/matplotcli"""
     )
     parser.add_argument(
         "code",
         help="""
-        python code with calls to matplotlib.pyplot to generate plots. 
+        python code with calls to matplotlib.pyplot to generate plots.
         Example: plt "plot(x,y); xlabel('time (s)')" < data.json
         """,
     )
@@ -92,6 +97,11 @@ def parse_args():
         "--no-show",
         action="store_true",
         help="do not call matplotlib.pyplot.show() after executing the code",
+    )
+    parser.add_argument(
+        "--version", "-V",
+        action="version",
+        version="%(prog)s version {}".format(__version__)
     )
     return parser.parse_args()
 
